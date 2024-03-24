@@ -1,3 +1,5 @@
+import io.github.renegrob.gradle.plugin.CustomCopy
+
 plugins {
     id("java")
     id("io.github.renegrob.gradle.plugin.example")
@@ -11,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(platform("org.junit:junit-bom:5.10.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter:latest")
 }
 
 java {
@@ -27,4 +29,15 @@ tasks.test {
 
 example {
     message = "Hello there!"
+}
+
+tasks.register("myCopy", CustomCopy::class.java) {
+    includeFilenames.set(listOf("**/*.kt"))
+    shouldCopyWrapper = true
+    from(rootDir) {
+        include("LICENSE")
+        into(".")
+    }
+    destinationDir = layout.buildDirectory.dir("example").get().asFile
+    includeEmptyDirs = false
 }
